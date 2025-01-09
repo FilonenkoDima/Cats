@@ -1,1 +1,29 @@
-<p>cats works!</p>
+<form [formGroup]="form">
+  <mat-form-field>
+    <mat-label>Breed</mat-label>
+    <input type="text"
+           placeholder="Enter breed"
+           matInput
+           formControlName="breedName"
+           [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete">
+      @for (breed of breeds$ | async; track breed) {
+        <mat-option [value]="breed.name">{{ breed.name }}</mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+</form>
+
+<button (click)="loadCats()">Cats</button>
+
+<div class="container-sm">
+  <div class="row mt-3 g-3">
+    <div class="col-md-3">
+      @for (cat of cats$ | async; track $index) {
+        <mat-card appearance="outlined">
+          <img mat-card-image [src]="cat.imageUrl" alt="Cat image">
+        </mat-card>
+      }
+    </div>
+  </div>
+</div>
