@@ -20,7 +20,7 @@
         <input matInput placeholder="Ex. 10" type="number" formControlName="count"/>
       </mat-form-field>
 
-      <button mat-flat-button (click)="loadCats()">Search cats</button>
+      <button mat-flat-button (submit)="onSubmit()">Search cats</button>
     </form>
 
     @for (cat of cats$ | async | slice: startIndex : endIndex; track cat.imageUrl) {

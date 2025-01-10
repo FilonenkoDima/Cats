@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Breed, Cat } from './cats.model';
-import { selectBreeds, selectCats } from './data/cats.selectors';
-import { loadBreeds, loadCats } from './data/cats.actions';
+import { selectBreeds, selectCats } from './store/cats.selectors';
+import { loadBreeds, loadCats } from './store/cats.actions';
 import { map, Observable } from 'rxjs';
 import { AsyncPipe, SlicePipe } from '@angular/common';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
@@ -40,20 +40,13 @@ import { MatButton } from '@angular/material/button';
 })
 export class CatsComponent {
   private store = inject(Store);
+  private formBuilder: FormBuilder = inject(FormBuilder);
+
   breeds$: Observable<Breed[]>;
   cats$: Observable<Cat[]>;
 
   pageIndex: number = 0;
   pageSize: number = 4;
-
-  get startIndex(): number {
-    return this.pageIndex * this.pageSize;
-  }
-  get endIndex(): number {
-    return this.startIndex + this.pageSize;
-  }
-
-  private formBuilder: FormBuilder = inject(FormBuilder);
 
   form = this.formBuilder.group({
     breedName: [''],
@@ -70,7 +63,15 @@ export class CatsComponent {
     this.cats$ = this.store.select(selectCats).pipe(takeUntilDestroyed());
   }
 
-  loadCats() {
+  get startIndex(): number {
+    return this.pageIndex * this.pageSize;
+  }
+
+  get endIndex(): number {
+    return this.startIndex + this.pageSize;
+  }
+
+  onSubmit() {
     const name = this.form.value.breedName ?? '';
     const count = this.form.value.count!; // Оновлена кількість
 

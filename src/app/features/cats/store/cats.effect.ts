@@ -8,7 +8,7 @@ import { Breed, Cat } from '../cats.model';
 @Injectable()
 export class CatsEffect {
   private actions$ = inject(Actions);
-  private httpCatService = inject(CatHttpService);
+  private httpCatService: CatHttpService = inject(CatHttpService);
 
   public loadBreeds$ = createEffect(() => {
     return this.actions$.pipe(

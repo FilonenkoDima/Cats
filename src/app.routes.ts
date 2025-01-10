@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { catsResolve } from './app/core/services/cats.resolve';
-import { breedsResolve } from './app/core/services/breeds.resolve';
+import { catsResolve } from './app/core/resolvers/cats.resolve';
+import { breedsResolve } from './app/core/resolvers/breeds.resolve';
 
-export const routes: Routes = [
+export const appRoutes: Routes = [
   {
     path: '',
     redirectTo: 'cats',

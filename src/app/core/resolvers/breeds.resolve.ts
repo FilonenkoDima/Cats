@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
 import { Observable } from 'rxjs';
-import { CatHttpService } from './cat-http.service';
+import { CatHttpService } from '../services/cat-http.service';
 import { Breed } from '../../features/cats/cats.model';
 
 export const breedsResolve: ResolveFn<Observable<Breed[]>> = () => {
