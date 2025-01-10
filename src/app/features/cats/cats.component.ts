@@ -3,8 +3,8 @@ import { Store } from '@ngrx/store';
 import { Breed, Cat } from './cats.model';
 import { selectBreeds, selectCats } from './data/cats.selectors';
 import { loadBreeds, loadCats } from './data/cats.actions';
-import { filter, map, Observable, tap } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import { async, map, Observable } from 'rxjs';
+import { AsyncPipe, SlicePipe } from '@angular/common';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import {
   MatAutocomplete,
@@ -13,9 +13,9 @@ import {
 } from '@angular/material/autocomplete';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatCard, MatCardImage } from '@angular/material/card';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatList } from '@angular/material/list';
 
 @Component({
   selector: 'app-cats',
@@ -31,9 +31,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInput,
-    MatCard,
-    MatCardImage,
     NgbModule,
+    MatPaginator,
+    MatList,
+    SlicePipe,
   ],
 })
 export class CatsComponent {
@@ -45,7 +46,7 @@ export class CatsComponent {
 
   form = this.formBuilder.group({
     breedName: [''],
-    count: [20],
+    count: [12],
   });
 
   constructor() {
@@ -60,6 +61,18 @@ export class CatsComponent {
     this.getBreedsIdByName(name).subscribe((id) => {
       this.store.dispatch(loadCats({ breedsId: id, count: 10 }));
     });
+  }
+  pageIndex: number = 0;
+  pageSize: number = 4;
+  lowValue: number = 0;
+  highValue: number = this.form.value.count!;
+
+  getPaginatorData(event: PageEvent) {
+    console.log(event);
+    this.pageSize = event.pageSize;
+    this.lowValue = event.pageIndex * this.pageSize;
+    this.highValue = this.lowValue + this.pageSize;
+    this.pageIndex = event.pageIndex;
   }
 
   private getBreedsIdByName(name: string) {
