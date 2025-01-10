@@ -1,9 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Breed, Cat } from './cats.model';
 import { selectBreeds, selectCats } from './data/cats.selectors';
 import { loadBreeds, loadCats } from './data/cats.actions';
-import { async, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { AsyncPipe, SlicePipe } from '@angular/common';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import {
@@ -15,7 +15,8 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatList } from '@angular/material/list';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-cats',
@@ -33,8 +34,8 @@ import { MatList } from '@angular/material/list';
     MatInput,
     NgbModule,
     MatPaginator,
-    MatList,
     SlicePipe,
+    MatButton,
   ],
 })
 export class CatsComponent {
@@ -42,7 +43,17 @@ export class CatsComponent {
   breeds$: Observable<Breed[]>;
   cats$: Observable<Cat[]>;
 
-  private formBuilder = inject(FormBuilder);
+  pageIndex: number = 0;
+  pageSize: number = 4;
+
+  get startIndex(): number {
+    return this.pageIndex * this.pageSize;
+  }
+  get endIndex(): number {
+    return this.startIndex + this.pageSize;
+  }
+
+  private formBuilder: FormBuilder = inject(FormBuilder);
 
   form = this.formBuilder.group({
     breedName: [''],
@@ -51,36 +62,41 @@ export class CatsComponent {
 
   constructor() {
     this.store.dispatch(loadBreeds());
+    this.store.dispatch(
+      loadCats({ breedsId: '', count: this.form.value.count! }),
+    );
 
-    this.breeds$ = this.store.select(selectBreeds);
-    this.cats$ = this.store.select(selectCats);
+    this.breeds$ = this.store.select(selectBreeds).pipe(takeUntilDestroyed());
+    this.cats$ = this.store.select(selectCats).pipe(takeUntilDestroyed());
   }
 
   loadCats() {
-    const name = this.form.value.breedName!;
-    this.getBreedsIdByName(name).subscribe((id) => {
-      this.store.dispatch(loadCats({ breedsId: id, count: 10 }));
-    });
+    const name = this.form.value.breedName ?? '';
+    const count = this.form.value.count!; // Оновлена кількість
+
+    this.breeds$
+      .pipe(
+        map((breeds) => {
+          const id = this.getBreedsIdByName(breeds, name);
+          this.store.dispatch(loadCats({ breedsId: id, count: count }));
+        }),
+      )
+      .subscribe();
   }
-  pageIndex: number = 0;
-  pageSize: number = 4;
-  lowValue: number = 0;
-  highValue: number = this.form.value.count!;
 
   getPaginatorData(event: PageEvent) {
-    console.log(event);
-    this.pageSize = event.pageSize;
-    this.lowValue = event.pageIndex * this.pageSize;
-    this.highValue = this.lowValue + this.pageSize;
     this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
   }
 
-  private getBreedsIdByName(name: string) {
-    return this.breeds$.pipe(
-      map((breeds) => {
-        const breed = breeds.find((b) => b.name === name);
-        return breed!.id ?? '';
-      }),
-    );
+  private getBreedsIdByName(breeds: Breed[], name: string) {
+    if (!name) {
+      return '';
+    }
+    const breed = breeds.find((b) => b.name === name);
+    if (!breed) {
+      alert(`${name} not found, try again!`);
+    }
+    return breed!.id;
   }
 }
