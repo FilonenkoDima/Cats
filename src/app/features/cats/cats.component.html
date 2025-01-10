@@ -12,18 +12,34 @@
       }
     </mat-autocomplete>
   </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Enter number of cats</mat-label>
+    <input matInput placeholder="Ex. 10" [value]="form.value.count" type="number" formControlName="count" #count />
+  </mat-form-field>
+
+  <button (click)="loadCats()">Cats</button>
 </form>
 
-<button (click)="loadCats()">Cats</button>
 
 <div class="container-sm">
   <div class="row mt-3 g-3">
-    <div class="col-md-3">
-      @for (cat of cats$ | async; track $index) {
-        <mat-card appearance="outlined">
-          <img mat-card-image [src]="cat.imageUrl" alt="Cat image">
-        </mat-card>
+
+      @for (cat of cats$ | async |
+        slice: lowValue : highValue; track $index) {
+        <div class="col-md-3 px-3">
+          <div class="card" >
+            <img class="img-fluid" style="height: 200px" [src]="cat.imageUrl" alt="Cat image">
+          </div>
+        </div>
       }
-    </div>
+    <mat-paginator [length]="(cats$ | async)?.length || 0"
+                   [pageSize]="pageSize"
+                   [pageSizeOptions]="[4, 8, 12]"
+                   (page)="getPaginatorData($event)"
+                   aria-label="Select page">
+
+    </mat-paginator>
   </div>
 </div>
+
