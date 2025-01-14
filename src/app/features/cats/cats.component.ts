@@ -17,7 +17,7 @@ import { MatButton } from '@angular/material/button';
 
 import { Breed, Cat } from './cats.model';
 import { selectBreeds, selectCats } from './store/cats.selectors';
-import { loadBreeds, loadCats } from './store/cats.actions';
+import { breedsData, catsData } from './store/cats.actions';
 
 @Component({
   selector: 'app-cats',
@@ -54,9 +54,9 @@ export class CatsComponent {
   });
 
   constructor() {
-    this.store.dispatch(loadBreeds());
+    this.store.dispatch(breedsData());
     this.store.dispatch(
-      loadCats({ breedsId: '', count: this.form.value.count! }),
+      catsData({ breedsId: '', count: this.form.value.count! }),
     );
 
     this.breeds$ = this.store.select(selectBreeds).pipe(takeUntilDestroyed());
@@ -79,7 +79,7 @@ export class CatsComponent {
       .pipe(
         map((breeds) => {
           const id = this.getBreedsIdByName(breeds, name);
-          this.store.dispatch(loadCats({ breedsId: id, count: count }));
+          this.store.dispatch(catsData({ breedsId: id, count: count }));
         }),
       )
       .subscribe();

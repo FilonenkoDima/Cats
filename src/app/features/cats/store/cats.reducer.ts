@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 
 import { Breed, Cat } from '../cats.model';
-import { loadedBreeds, loadedCats } from './cats.actions';
+import { breedsDataSuccess, catsDataSuccess } from './cats.actions';
 
 export interface State {
   breeds: Breed[];
@@ -15,6 +15,6 @@ export const initialState: State = {
 
 export const catsReducer = createReducer(
   initialState,
-  on(loadedBreeds, (state, { breeds }) => ({ ...state, breeds })),
-  on(loadedCats, (state, { cats }) => ({ ...state, cats })),
+  on(breedsDataSuccess, (state, { breeds }) => ({ ...state, breeds })),
+  on(catsDataSuccess, (state, { cats }) => ({ ...state, cats })),
 );
