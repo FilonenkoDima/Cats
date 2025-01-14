@@ -22,7 +22,6 @@ import { loadBreeds, loadCats } from './store/cats.actions';
 @Component({
   selector: 'app-cats',
   templateUrl: './cats.component.html',
-  styleUrl: './cats.component.css',
   standalone: true,
   imports: [
     AsyncPipe,
