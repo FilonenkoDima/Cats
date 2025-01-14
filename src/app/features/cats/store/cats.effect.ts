@@ -16,15 +16,16 @@ export class CatsEffect {
       ofType(loadBreeds),
       exhaustMap(() =>
         this.httpCatService.getCatBreeds().pipe(
-          map((breeds) => {
-            const arr: Breed[] = breeds.map(
-              (breed): Breed => ({
-                id: breed.id,
-                name: breed.name,
-              }),
-            );
-            return loadedBreeds({ breeds: [...arr] });
-          }),
+          map((breeds) =>
+            loadedBreeds({
+              breeds: breeds.map(
+                (breed): Breed => ({
+                  id: breed.id,
+                  name: breed.name,
+                }),
+              ),
+            }),
+          ),
         ),
       ),
     );
@@ -35,14 +36,15 @@ export class CatsEffect {
       ofType(loadCats),
       exhaustMap((action) =>
         this.httpCatService.getCats(action.breedsId, action.count).pipe(
-          map((cats) => {
-            const catArray: Cat[] = cats.map(
-              (cat): Cat => ({
-                imageUrl: cat.url, // переконайтеся, що `url` правильно відповідає вашій API-відповіді
-              }),
-            );
-            return loadedCats({ cats: catArray });
-          }),
+          map((cats) =>
+            loadedCats({
+              cats: cats.map(
+                (cat): Cat => ({
+                  imageUrl: cat.url,
+                }),
+              ),
+            }),
+          ),
         ),
       ),
     );

@@ -15,12 +15,6 @@ export const initialState: State = {
 
 export const catsReducer = createReducer(
   initialState,
-  on(loadedBreeds, (state, action) => ({
-    ...state,
-    breeds: [...action.breeds],
-  })),
-  on(loadedCats, (state, action) => ({
-    ...state,
-    cats: [...action.cats],
-  })),
+  on(loadedBreeds, (state, { breeds }) => ({ ...state, breeds })),
+  on(loadedCats, (state, { cats }) => ({ ...state, cats })),
 );
