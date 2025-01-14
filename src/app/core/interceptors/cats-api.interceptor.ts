@@ -1,4 +1,5 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+
 import { catAPI } from '../../../enviroments/enviroments';
 
 export const catsApiInterceptor: HttpInterceptorFn = (req, next) => {

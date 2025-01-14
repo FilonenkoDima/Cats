@@ -1,4 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+
 import { State } from './cats.reducer';
 
 export const selectCatsState = createFeatureSelector<State>('cats');

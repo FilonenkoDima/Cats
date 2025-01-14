@@ -1,5 +1,6 @@
-import { Breed, Cat } from '../cats.model';
 import { createReducer, on } from '@ngrx/store';
+
+import { Breed, Cat } from '../cats.model';
 import { loadedBreeds, loadedCats } from './cats.actions';
 
 export interface State {

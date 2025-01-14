@@ -1,8 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Breed, Cat } from './cats.model';
-import { selectBreeds, selectCats } from './store/cats.selectors';
-import { loadBreeds, loadCats } from './store/cats.actions';
 import { map, Observable } from 'rxjs';
 import { AsyncPipe, SlicePipe } from '@angular/common';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +14,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
+
+import { Breed, Cat } from './cats.model';
+import { selectBreeds, selectCats } from './store/cats.selectors';
+import { loadBreeds, loadCats } from './store/cats.actions';
 
 @Component({
   selector: 'app-cats',

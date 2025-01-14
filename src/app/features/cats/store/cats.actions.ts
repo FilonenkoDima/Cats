@@ -1,4 +1,5 @@
 import { createAction, props } from '@ngrx/store';
+
 import { Breed, Cat } from '../cats.model';
 
 export const loadBreeds = createAction('[API Cats] load breeds');
