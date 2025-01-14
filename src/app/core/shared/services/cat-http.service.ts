@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { catAPI_URL } from '../../../enviroments/enviroments';
+import { catAPI_URL } from '../../../../enviroments/enviroments';
 
 @Injectable({
   providedIn: 'root',

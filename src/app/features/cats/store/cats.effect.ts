@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { exhaustMap, map } from 'rxjs';
 
-import { CatHttpService } from '../../../core/services/cat-http.service';
+import { CatHttpService } from '../../../core/shared/services/cat-http.service';
 import { loadBreeds, loadCats, loadedBreeds, loadedCats } from './cats.actions';
 import { Breed, Cat } from '../cats.model';
 
