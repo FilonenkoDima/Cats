@@ -3,22 +3,24 @@ import { Routes } from '@angular/router';
 import { catsResolve } from './app/core/resolvers/cats.resolve';
 import { breedsResolve } from './app/core/resolvers/breeds.resolve';
 import { CatsComponent } from './app/features/cats/cats.component';
+import {
+  CATS,
+  INVALID_PATH,
+} from './app/core/shared/constants/route.constants';
 
 export const appRoutes: Routes = [
   {
     path: '',
-    redirectTo: 'cats',
+    redirectTo: CATS,
     pathMatch: 'full',
   },
   {
-    path: 'cats',
+    path: CATS,
     component: CatsComponent,
     resolve: [catsResolve, breedsResolve],
-    // loadComponent: () =>
-    //   import('./app/features/cats/cats.component').then((a) => a.CatsComponent),
   },
   {
-    path: '**',
+    path: INVALID_PATH,
     redirectTo: 'cats',
   },
 ];
