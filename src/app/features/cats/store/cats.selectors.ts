@@ -15,4 +15,14 @@ export namespace CatsSelectors {
     selectCatsState,
     (state) => state.cats,
   );
+
+  export const selectLoadingBreeds = createSelector(
+    selectCatsState,
+    (state) => state.isLoadingBreeds,
+  );
+
+  export const selectLoadingCats = createSelector(
+    selectCatsState,
+    (state) => state.isLoadingCats,
+  );
 }

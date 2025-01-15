@@ -13,6 +13,7 @@ export const appRoutes: Routes = [
     path: '',
     redirectTo: CATS,
     pathMatch: 'full',
+    resolve: [catsResolve, breedsResolve],
   },
   {
     path: CATS,
@@ -21,6 +22,6 @@ export const appRoutes: Routes = [
   },
   {
     path: INVALID_PATH,
-    redirectTo: 'cats',
+    redirectTo: CATS,
   },
 ];

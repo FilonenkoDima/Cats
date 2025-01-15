@@ -14,6 +14,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 import { Breed, Cat } from './cats.model';
 import { CatsSelectors } from './store/cats.selectors';
@@ -36,6 +37,7 @@ import { CatsActions } from './store/cats.actions';
     MatPaginator,
     SlicePipe,
     MatButton,
+    MatProgressSpinner,
   ],
 })
 export class CatsComponent {
@@ -44,6 +46,8 @@ export class CatsComponent {
 
   breeds$: Observable<Breed[]>;
   cats$: Observable<Cat[]>;
+  isLoadingBreeds$: Observable<boolean>;
+  isLoadingCats$: Observable<boolean>;
 
   pageIndex: number = 0;
   pageSize: number = 4;
@@ -57,9 +61,11 @@ export class CatsComponent {
     this.breeds$ = this.store
       .select(CatsSelectors.selectBreeds)
       .pipe(takeUntilDestroyed());
-    this.cats$ = this.store
-      .select(CatsSelectors.selectCats)
-      .pipe(takeUntilDestroyed());
+    this.cats$ = this.store.select(CatsSelectors.selectCats);
+    this.isLoadingCats$ = this.store.select(CatsSelectors.selectLoadingCats);
+    this.isLoadingBreeds$ = this.store.select(
+      CatsSelectors.selectLoadingBreeds,
+    );
   }
 
   get startIndex(): number {

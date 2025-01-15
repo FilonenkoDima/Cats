@@ -1,41 +1,47 @@
 <div class="container-sm">
-  <div class="row mt-3 g-3">
-    <form [formGroup]="form" class="d-flex justify-content-around align-items-center">
-      <mat-form-field>
-        <mat-label>Breed</mat-label>
-        <input type="text"
-               placeholder="Enter breed"
-               matInput
-               formControlName="breedName"
-               [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete">
-          @for (breed of breeds$ | async; track breed) {
-            <mat-option [value]="breed.name">{{ breed.name }}</mat-option>
-          }
-        </mat-autocomplete>
-      </mat-form-field>
+  @if ((isLoadingBreeds$ | async) || (isLoadingCats$ | async)) {
+    <div class="d-flex justify-content-center align-items-center vh-100">
+      <mat-spinner></mat-spinner>
+    </div>
+  } @else {
+    <div class="row mt-3 g-3">
+      <form [formGroup]="form" class="d-flex justify-content-around align-items-center">
+        <mat-form-field>
+          <mat-label>Breed</mat-label>
+          <input type="text"
+                 placeholder="Enter breed"
+                 matInput
+                 formControlName="breedName"
+                 [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete">
+            @for (breed of breeds$ | async; track breed) {
+              <mat-option [value]="breed.name">{{ breed.name }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Enter number of cats</mat-label>
-        <input matInput placeholder="Ex. 10" type="number" formControlName="count"/>
-      </mat-form-field>
+        <mat-form-field>
+          <mat-label>Enter number of cats</mat-label>
+          <input matInput placeholder="Ex. 10" type="number" formControlName="count"/>
+        </mat-form-field>
 
-      <button mat-flat-button (click)="onSubmit()">Search cats</button>
-    </form>
+        <button mat-flat-button (click)="onSubmit()">Search cats</button>
+      </form>
 
-    @for (cat of cats$ | async | slice: startIndex : endIndex; track cat.url) {
-      <div class="col-md-3 px-3">
-        <div class="card">
-          <img class="img-fluid" style="height: 200px" [src]="cat.url" alt="Cat image">
+      @for (cat of cats$ | async | slice: startIndex : endIndex; track cat.url) {
+        <div class="col-md-3 px-3">
+          <div class="card">
+            <img class="img-fluid" style="height: 200px" [src]="cat.url" alt="Cat image">
+          </div>
         </div>
-      </div>
-    }
-    <mat-paginator [length]="form.value.count"
-                   [pageIndex]="pageIndex"
-                   [pageSize]="pageSize"
-                   [pageSizeOptions]="[4, 8, 12, 16, 20]"
-                   (page)="getPaginatorData($event)">
-    </mat-paginator>
-  </div>
+      }
+      <mat-paginator [length]="form.value.count"
+                     [pageIndex]="pageIndex"
+                     [pageSize]="pageSize"
+                     [pageSizeOptions]="[4, 8, 12, 16, 20]"
+                     (page)="getPaginatorData($event)">
+      </mat-paginator>
+    </div>
+  }
 </div>
 
