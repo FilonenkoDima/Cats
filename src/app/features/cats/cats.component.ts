@@ -16,8 +16,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
 
 import { Breed, Cat } from './cats.model';
-import { selectBreeds, selectCats } from './store/cats.selectors';
-import { breedsData, catsData } from './store/cats.actions';
+import { CatsSelectors } from './store/cats.selectors';
+import { CatsActions } from './store/cats.actions';
 
 @Component({
   selector: 'app-cats',
@@ -54,13 +54,17 @@ export class CatsComponent {
   });
 
   constructor() {
-    this.store.dispatch(breedsData());
+    this.store.dispatch(CatsActions.breedsData());
     this.store.dispatch(
-      catsData({ breedsId: '', count: this.form.value.count! }),
+      CatsActions.catsData({ breedsId: '', count: this.form.value.count! }),
     );
 
-    this.breeds$ = this.store.select(selectBreeds).pipe(takeUntilDestroyed());
-    this.cats$ = this.store.select(selectCats).pipe(takeUntilDestroyed());
+    this.breeds$ = this.store
+      .select(CatsSelectors.selectBreeds)
+      .pipe(takeUntilDestroyed());
+    this.cats$ = this.store
+      .select(CatsSelectors.selectCats)
+      .pipe(takeUntilDestroyed());
   }
 
   get startIndex(): number {
@@ -79,7 +83,9 @@ export class CatsComponent {
       .pipe(
         map((breeds) => {
           const id = this.getBreedsIdByName(breeds, name);
-          this.store.dispatch(catsData({ breedsId: id, count: count }));
+          this.store.dispatch(
+            CatsActions.catsData({ breedsId: id, count: count }),
+          );
         }),
       )
       .subscribe();
