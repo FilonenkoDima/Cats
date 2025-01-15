@@ -1,5 +1,5 @@
 export interface Cat {
-  imageUrl: string;
+  url: string;
 }
 
 export interface Breed {

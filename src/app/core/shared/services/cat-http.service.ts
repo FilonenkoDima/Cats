@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { catAPI_URL } from '../../../../enviroments/enviroments';
+import { Breed, Cat } from '../../../features/cats/cats.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,13 +11,13 @@ import { catAPI_URL } from '../../../../enviroments/enviroments';
 export class CatHttpService {
   private httpClient: HttpClient = inject(HttpClient);
 
-  getCats(breedsId: string = '', count: number = 12): Observable<any[]> {
-    return this.httpClient.get<any>(
+  getCats(breedsId: string = '', count: number = 12): Observable<Cat[]> {
+    return this.httpClient.get<any[]>(
       `${catAPI_URL}/images/search?limit=${count}&breed_ids=${breedsId}`,
     );
   }
 
-  getCatBreeds(): Observable<any[]> {
+  getCatBreeds(): Observable<Breed[]> {
     return this.httpClient.get<any[]>(`${catAPI_URL}/breeds`);
   }
 }

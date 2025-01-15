@@ -54,11 +54,6 @@ export class CatsComponent {
   });
 
   constructor() {
-    this.store.dispatch(CatsActions.breedsData());
-    this.store.dispatch(
-      CatsActions.catsData({ breedsId: '', count: this.form.value.count! }),
-    );
-
     this.breeds$ = this.store
       .select(CatsSelectors.selectBreeds)
       .pipe(takeUntilDestroyed());
@@ -76,8 +71,9 @@ export class CatsComponent {
   }
 
   onSubmit() {
+    this.pageIndex = 0;
     const name = this.form.value.breedName ?? '';
-    const count = this.form.value.count!; // Оновлена кількість
+    const count = this.form.value.count!;
 
     this.breeds$
       .pipe(

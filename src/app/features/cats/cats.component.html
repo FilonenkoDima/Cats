@@ -23,14 +23,15 @@
       <button mat-flat-button (click)="onSubmit()">Search cats</button>
     </form>
 
-    @for (cat of cats$ | async | slice: startIndex : endIndex; track cat.imageUrl) {
+    @for (cat of cats$ | async | slice: startIndex : endIndex; track cat.url) {
       <div class="col-md-3 px-3">
         <div class="card">
-          <img class="img-fluid" style="height: 200px" [src]="cat.imageUrl" alt="Cat image">
+          <img class="img-fluid" style="height: 200px" [src]="cat.url" alt="Cat image">
         </div>
       </div>
     }
     <mat-paginator [length]="form.value.count"
+                   [pageIndex]="pageIndex"
                    [pageSize]="pageSize"
                    [pageSizeOptions]="[4, 8, 12, 16, 20]"
                    (page)="getPaginatorData($event)">

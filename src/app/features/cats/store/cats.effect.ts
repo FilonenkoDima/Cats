@@ -40,7 +40,7 @@ export class CatsEffect {
             CatsActions.catsDataSuccess({
               cats: cats.map(
                 (cat): Cat => ({
-                  imageUrl: cat.url,
+                  url: cat.url,
                 }),
               ),
             }),
