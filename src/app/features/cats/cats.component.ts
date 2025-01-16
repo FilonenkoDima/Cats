@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { map, Observable } from 'rxjs';
 import { AsyncPipe, SlicePipe } from '@angular/common';
-import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import {
   MatAutocomplete,
   MatAutocompleteTrigger,
@@ -26,7 +26,6 @@ import { CatsActions } from './store/cats.actions';
   standalone: true,
   imports: [
     AsyncPipe,
-    MatFormField,
     MatAutocomplete,
     MatOption,
     MatAutocompleteTrigger,
@@ -45,12 +44,17 @@ export class CatsComponent {
   private formBuilder: FormBuilder = inject(FormBuilder);
 
   breeds$: Observable<Breed[]>;
-  cats$: Observable<Cat[]>;
-  isLoadingBreeds$: Observable<boolean>;
-  isLoadingCats$: Observable<boolean>;
+  cats$: Observable<Cat[]> = this.store.select(CatsSelectors.selectCats);
+  isLoadingBreeds$: Observable<boolean> = this.store.select(
+    CatsSelectors.selectLoadingBreeds,
+  );
+  isLoadingCats$: Observable<boolean> = this.store.select(
+    CatsSelectors.selectLoadingCats,
+  );
 
   pageIndex: number = 0;
   pageSize: number = 4;
+  pageSizeOptions: number[] = [4, 8, 12, 16, 20]; // Default values
 
   form = this.formBuilder.group({
     breedName: [''],
@@ -61,11 +65,10 @@ export class CatsComponent {
     this.breeds$ = this.store
       .select(CatsSelectors.selectBreeds)
       .pipe(takeUntilDestroyed());
-    this.cats$ = this.store.select(CatsSelectors.selectCats);
-    this.isLoadingCats$ = this.store.select(CatsSelectors.selectLoadingCats);
-    this.isLoadingBreeds$ = this.store.select(
-      CatsSelectors.selectLoadingBreeds,
-    );
+
+    this.cats$.pipe(takeUntilDestroyed()).subscribe((cats) => {
+      this.pageSizeOptions = this.generatePageSizeOptions(cats.length);
+    });
   }
 
   get startIndex(): number {
@@ -107,5 +110,10 @@ export class CatsComponent {
       alert(`${name} not found, try again!`);
     }
     return breed!.id;
+  }
+
+  private generatePageSizeOptions(length: number): number[] {
+    const options = [4, 8, 12, 16, 20];
+    return options.filter((option) => option <= length);
   }
 }

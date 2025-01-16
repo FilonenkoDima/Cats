@@ -6,7 +6,7 @@ import { provideRouter } from '@angular/router';
 import { ApplicationConfig } from '@angular/core';
 
 import { catsApiInterceptor } from './app/core/interceptors/cats-api.interceptor';
-import { CatsReducer } from './app/features/cats/store/cats.reducer';
+import { catsReducer } from './app/features/cats/store/cats.reducer';
 import { CatsEffect } from './app/features/cats/store/cats.effect';
 import { appRoutes } from './app.routes';
 
@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withInterceptors([catsApiInterceptor])),
     provideAnimationsAsync(),
-    provideStore({ cats: CatsReducer.catsReducer }),
+    provideStore({ cats: catsReducer }),
     provideEffects(CatsEffect),
     provideRouter(appRoutes),
   ],

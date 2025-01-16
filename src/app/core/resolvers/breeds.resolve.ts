@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
-
 import { Store } from '@ngrx/store';
+
 import { CatsActions } from '../../features/cats/store/cats.actions';
 
 export const breedsResolve: ResolveFn<void> = () => {
