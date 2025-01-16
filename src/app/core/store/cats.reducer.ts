@@ -1,40 +1,32 @@
 import { createReducer, on } from '@ngrx/store';
 
-import { Breed, Cat } from '../cats.model';
+import { Breed, Cat } from '../models/cats.model';
 import { CatsActions } from './cats.actions';
 
 export interface State {
   breeds: Breed[];
   cats: Cat[];
-  isLoadingBreeds: boolean;
-  isLoadingCats: boolean;
+  isLoading: boolean;
 }
 
 export const initialState: State = {
   breeds: [],
   cats: [],
-  isLoadingBreeds: true,
-  isLoadingCats: true,
+  isLoading: false,
 };
 
 export const catsReducer = createReducer(
   initialState,
-  on(CatsActions.breedsData, (state) => ({
-    ...state,
-    isLoadingBreeds: true,
-  })),
   on(CatsActions.breedsDataSuccess, (state, { breeds }) => ({
     ...state,
     breeds,
-    isLoadingBreeds: false,
-  })),
-  on(CatsActions.catsData, (state) => ({
-    ...state,
-    isLoadingCats: true,
   })),
   on(CatsActions.catsDataSuccess, (state, { cats }) => ({
     ...state,
     cats,
-    isLoadingCats: false,
+  })),
+  on(CatsActions.setLoader, (state, { isLoading }) => ({
+    ...state,
+    isLoading,
   })),
 );

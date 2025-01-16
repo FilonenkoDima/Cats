@@ -1,12 +1,9 @@
 import { Routes } from '@angular/router';
 
-import { catsResolve } from './app/core/resolvers/cats.resolve';
-import { breedsResolve } from './app/core/resolvers/breeds.resolve';
-import { CatsComponent } from './app/features/cats/cats.component';
-import {
-  CATS,
-  INVALID_PATH,
-} from './app/core/shared/constants/route.constants';
+import { catsResolve } from './app/core/api/resolvers/cats.resolve';
+import { breedsResolve } from './app/core/api/resolvers/breeds.resolve';
+import { CatsComponent } from './app/views/cats/cats.component';
+import { CATS, INVALID_PATH } from './app/core/constants/route.constants';
 
 export const appRoutes: Routes = [
   {

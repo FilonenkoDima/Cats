@@ -1,7 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { State } from './cats.reducer';
-import { CATS } from '../../../core/shared/constants/selectors.constants';
+import { CATS } from '../constants/selectors.constants';
 
 export namespace CatsSelectors {
   export const selectCatsState = createFeatureSelector<State>(CATS);
@@ -16,13 +16,8 @@ export namespace CatsSelectors {
     (state) => state.cats,
   );
 
-  export const selectLoadingBreeds = createSelector(
+  export const selectLoading = createSelector(
     selectCatsState,
-    (state) => state.isLoadingBreeds,
-  );
-
-  export const selectLoadingCats = createSelector(
-    selectCatsState,
-    (state) => state.isLoadingCats,
+    (state) => state.isLoading,
   );
 }

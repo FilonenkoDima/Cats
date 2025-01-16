@@ -1,13 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AsyncPipe, SlicePipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {
-  MatAutocomplete,
-  MatAutocompleteTrigger,
-  MatOption,
-} from '@angular/material/autocomplete';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -15,10 +10,11 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgSelectModule } from '@ng-select/ng-select';
 
-import { Breed, Cat } from './cats.model';
-import { CatsSelectors } from './store/cats.selectors';
-import { CatsActions } from './store/cats.actions';
+import { Breed, Cat } from '../../core/models/cats.model';
+import { CatsSelectors } from '../../core/store/cats.selectors';
+import { CatsActions } from '../../core/store/cats.actions';
 
 @Component({
   selector: 'app-cats',
@@ -26,9 +22,6 @@ import { CatsActions } from './store/cats.actions';
   standalone: true,
   imports: [
     AsyncPipe,
-    MatAutocomplete,
-    MatOption,
-    MatAutocompleteTrigger,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInput,
@@ -37,19 +30,17 @@ import { CatsActions } from './store/cats.actions';
     SlicePipe,
     MatButton,
     MatProgressSpinner,
+    NgSelectModule,
   ],
 })
-export class CatsComponent {
+export class CatsComponent implements OnInit {
   private store = inject(Store);
   private formBuilder: FormBuilder = inject(FormBuilder);
 
-  breeds$: Observable<Breed[]>;
+  breeds$: Observable<Breed[]> = this.store.select(CatsSelectors.selectBreeds);
   cats$: Observable<Cat[]> = this.store.select(CatsSelectors.selectCats);
-  isLoadingBreeds$: Observable<boolean> = this.store.select(
-    CatsSelectors.selectLoadingBreeds,
-  );
-  isLoadingCats$: Observable<boolean> = this.store.select(
-    CatsSelectors.selectLoadingCats,
+  isLoading$: Observable<boolean> = this.store.select(
+    CatsSelectors.selectLoading,
   );
 
   pageIndex: number = 0;
@@ -61,11 +52,7 @@ export class CatsComponent {
     count: [12],
   });
 
-  constructor() {
-    this.breeds$ = this.store
-      .select(CatsSelectors.selectBreeds)
-      .pipe(takeUntilDestroyed());
-
+  ngOnInit() {
     this.cats$.pipe(takeUntilDestroyed()).subscribe((cats) => {
       this.pageSizeOptions = this.generatePageSizeOptions(cats.length);
     });
@@ -81,35 +68,17 @@ export class CatsComponent {
 
   onSubmit() {
     this.pageIndex = 0;
-    const name = this.form.value.breedName ?? '';
-    const count = this.form.value.count!;
-
-    this.breeds$
-      .pipe(
-        map((breeds) => {
-          const id = this.getBreedsIdByName(breeds, name);
-          this.store.dispatch(
-            CatsActions.catsData({ breedsId: id, count: count }),
-          );
-        }),
-      )
-      .subscribe();
+    this.store.dispatch(
+      CatsActions.catsData({
+        breedsId: this.form.value.breedName!,
+        count: this.form.value.count!,
+      }),
+    );
   }
 
   getPaginatorData(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-  }
-
-  private getBreedsIdByName(breeds: Breed[], name: string) {
-    if (!name) {
-      return '';
-    }
-    const breed = breeds.find((b) => b.name === name);
-    if (!breed) {
-      alert(`${name} not found, try again!`);
-    }
-    return breed!.id;
   }
 
   private generatePageSizeOptions(length: number): number[] {

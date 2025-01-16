@@ -5,9 +5,9 @@ import { provideEffects } from '@ngrx/effects';
 import { provideRouter } from '@angular/router';
 import { ApplicationConfig } from '@angular/core';
 
-import { catsApiInterceptor } from './app/core/interceptors/cats-api.interceptor';
-import { catsReducer } from './app/features/cats/store/cats.reducer';
-import { CatsEffect } from './app/features/cats/store/cats.effect';
+import { catsApiInterceptor } from './app/core/api/interceptors/cats-api.interceptor';
+import { catsReducer } from './app/core/store/cats.reducer';
+import { CatsEffect } from './app/core/store/cats.effect';
 import { appRoutes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
