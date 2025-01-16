@@ -12,12 +12,12 @@ export class CatHttpService {
   private httpClient: HttpClient = inject(HttpClient);
 
   getCats(breedsId: string = '', count: number = 12): Observable<Cat[]> {
-    return this.httpClient.get<any[]>(
+    return this.httpClient.get<Cat[]>(
       `${catAPI_URL}/images/search?limit=${count}&breed_ids=${breedsId}`,
     );
   }
 
   getCatBreeds(): Observable<Breed[]> {
-    return this.httpClient.get<any[]>(`${catAPI_URL}/breeds`);
+    return this.httpClient.get<Breed[]>(`${catAPI_URL}/breeds`);
   }
 }
