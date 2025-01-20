@@ -1,0 +1,42 @@
+<div class="container-sm">
+  @if (isLoading$ | async) {
+    <div class="d-flex justify-content-center align-items-center vh-100">
+      <mat-spinner></mat-spinner>
+    </div>
+  } @else {
+    <div class="row mt-3 g-3">
+      <form [formGroup]="form" class="d-flex justify-content-around align-items-center">
+        <ng-select class="w-25"
+          [items]="breeds$ | async"
+                   bindLabel="name"
+                   bindValue="id"
+                   placeholder="Select breed"
+                   formControlName="breedName">
+        </ng-select>
+
+        <mat-form-field>
+          <mat-label>Enter number of cats</mat-label>
+          <input matInput placeholder="Ex. 10" type="number" formControlName="count"/>
+        </mat-form-field>
+
+        <button mat-flat-button (click)="onSubmit()">Search cats</button>
+      </form>
+
+      @for (cat of cats$ | async | slice: startIndex : endIndex; track cat.url) {
+        <div class="col-md-3 px-3">
+          <div class="card">
+            <img class="img-fluid" style="height: 200px" [src]="cat.url" alt="Cat image">
+          </div>
+        </div>
+      }
+      <mat-paginator
+        [length]="(cats$ | async)!.length"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="getPaginatorData($event)">
+      </mat-paginator>
+    </div>
+  }
+</div>
+
