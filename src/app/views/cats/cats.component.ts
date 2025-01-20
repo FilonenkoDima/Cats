@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AsyncPipe, SlicePipe } from '@angular/common';
@@ -33,7 +33,7 @@ import { CatsActions } from '../../core/store/cats.actions';
     NgSelectModule,
   ],
 })
-export class CatsComponent implements OnInit {
+export class CatsComponent {
   private store = inject(Store);
   private formBuilder: FormBuilder = inject(FormBuilder);
 
@@ -45,14 +45,14 @@ export class CatsComponent implements OnInit {
 
   pageIndex: number = 0;
   pageSize: number = 4;
-  pageSizeOptions: number[] = [4, 8, 12, 16, 20]; // Default values
+  pageSizeOptions: number[] = [4, 8, 12, 16, 20];
 
   form = this.formBuilder.group({
     breedName: [''],
     count: [12],
   });
 
-  ngOnInit() {
+  constructor() {
     this.cats$.pipe(takeUntilDestroyed()).subscribe((cats) => {
       this.pageSizeOptions = this.generatePageSizeOptions(cats.length);
     });
